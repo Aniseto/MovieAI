@@ -1,4 +1,4 @@
-# ADR-001 — Público objetivo: guionistas indie y estudiantes de cine
+# ADR-001 — Visión de producto y público objetivo
 
 **Estado:** PROPOSED
 **Fecha:** 2026-08-29
@@ -6,61 +6,94 @@
 
 ---
 
-## Contexto
+## Visión
 
-Durante la fase de investigación inicial se identificaron múltiples perfiles de usuario potencial para MovieAI. Google Flow (Google I/O 2025) cubre el segmento de creadores de vídeo general con estética fotorrealista y flujo automatizado. Existe un hueco claro en el segmento de guionistas y estudiantes que necesitan una herramienta con más control creativo, estética artesanal y sin coste de cloud.
+> **Cualquier persona con una historia que contar puede crear un storyboard y convertirlo en un vídeo animado como si fuera una película.**
 
-## Decisión
+MovieAI elimina la barrera técnica y económica entre tener una idea y verla en pantalla. No hace falta saber dibujar, ni tener presupuesto, ni conocer herramientas profesionales. Solo hace falta escribir.
 
-**El público objetivo de MovieAI son guionistas indie y estudiantes de cine/animación.**
+---
 
-### Perfil primario — Guionista indie
-- Edad: 20-40
-- Perfil: escribe guiones de forma independiente, sin acceso a presupuesto de producción
-- Necesidad: visualizar su guión como storyboard antes de buscar financiación o producir
-- Dolor actual: las herramientas profesionales (Final Draft, Celtx) no generan storyboard; las que generan storyboard (Flow, Higgsfield) no tienen editor de guión serio ni estética artesanal
-- Disposición a pagar: media-baja, valora herramientas asequibles o de pago único
+## Público objetivo
 
-### Perfil secundario — Estudiante de cine / animación / comunicación audiovisual
-- Edad: 18-26
-- Perfil: estudia en escuela de cine, universidad o de forma autodidacta
-- Necesidad: aprender el flujo guión → storyboard → animación, entregar proyectos con calidad visual sin presupuesto
-- Dolor actual: no puede permitirse software profesional ni producción real
-- Disposición a pagar: baja, valora freemium o licencia de estudiante
+### Público primario — Cualquier persona con una historia
+- Sin requisitos de conocimiento técnico
+- Edad: 16-50+
+- Perfil: cualquiera que tenga una historia en la cabeza y quiera verla animada
+- Ejemplos: un padre que quiere hacer un cuento animado para sus hijos, alguien que sueña con hacer una película, un youtuber que quiere previsualizar su guión
 
-### Perfil terciario — Creador de contenido / YouTuber / TikToker narrativo
+### Público secundario — Guionistas indie y estudiantes de cine
+- Edad: 18-40
+- Perfil: escribe guiones de forma independiente o como parte de sus estudios
+- Necesidad: visualizar su guión con el lenguaje del cine (storyboard) antes de producirlo
+- Valor añadido: editor de guión serio con formato screenplay
+
+### Público terciario — Creadores de contenido narrativo
 - Edad: 20-35
-- Perfil: crea contenido de formato largo con narrativa (mini-documentales, cortos, sketches)
-- Necesidad: previsualizar su contenido antes de grabar, crear animatics
-- Disposición a pagar: media
+- Perfil: YouTubers, TikTokers, creadores de cortos, animadores indie
+- Necesidad: convertir sus ideas en vídeos animados sin equipo de producción
+
+---
+
+## Flujo de usuario objetivo
+
+```
+[El usuario escribe su historia en texto libre o formato guión]
+              ↓
+[MovieAI la convierte en un storyboard panel a panel — estilo boceto B&N]
+              ↓
+[El usuario revisa, ajusta y aprueba el storyboard]
+              ↓
+[MovieAI anima cada panel → vídeo animado estilo película]
+              ↓
+[El usuario tiene su corto animado listo para compartir]
+```
+
+---
+
+## Propuesta de valor
+
+- **Accesible:** sin conocimientos técnicos, sin presupuesto, sin equipo
+- **Artesanal:** estética de boceto B&N — el lenguaje visual del cine, no fotorrealismo de IA genérico
+- **Con control:** el usuario valida el storyboard antes de animar — no es una caja negra
+- **Local:** sin dependencia de cloud, sin coste por generación, privacidad total
+- **Completo:** de la historia al vídeo animado en un solo flujo
+
+---
+
+## Diferencial vs competencia
+
+| | MovieAI | Google Flow | Celtx | Boords |
+|---|---------|-------------|-------|--------|
+| Público | **Cualquiera** | Creadores avanzados | Profesionales | Agencias |
+| Entrada | **Texto libre o guión** | Prompts | Guión | Imágenes |
+| Estética | **B&N boceto lápiz** | Fotorrealista color | N/A | Cualquiera |
+| Flujo completo guión→vídeo | **Sí** | Parcial | No | No |
+| Control panel a panel | **Sí** | No | N/A | Sí |
+| Local / sin cloud | **Sí** | No | No | No |
+| Precio objetivo | **Freemium + €9-29** | $20+/mes | $20+/mes | $15+/mes |
 
 ---
 
 ## Implicaciones de diseño
 
-### Lo que SÍ debe tener MovieAI para estos perfiles
-- Editor de guión serio con formato screenplay (Fountain) — el guionista indie necesita escribir, no solo generar
-- Estética de boceto B&N — auténtica, artesanal, no fotorrealista; es el lenguaje visual del storyboard profesional
-- Control panel a panel — el usuario revisa y aprueba cada frame antes de animar
-- Exportación de storyboard en PDF — para presentar a productores, profesores o colaboradores
-- Precio accesible — freemium o pago único bajo; sin suscripción cara
-- Funcionamiento local o con opción offline — privacidad, sin dependencia de cloud
+### Debe ser extremadamente fácil de usar
+- La entrada puede ser texto libre ("quiero una historia de un niño que encuentra un dragón") o formato screenplay
+- El LLM convierte el texto libre en estructura de escenas automáticamente
+- Sin jerga técnica en la interfaz
 
-### Lo que NO necesita MovieAI (para no perder el foco)
-- Estética fotorrealista o a color (eso es Google Flow)
-- Integración con TikTok o redes sociales (eso es TiktokAI)
-- Producción de vídeo de alta calidad para distribución comercial
-- Colaboración en equipo en tiempo real (complejidad innecesaria para el MVP)
+### La estética B&N boceto es la identidad visual del producto
+- No fotorrealista, no a color — eso es Google Flow
+- El boceto a lápiz tiene personalidad y es universalmente legible como "historia"
+- Es el lenguaje visual que cualquier persona asocia con "película en proceso"
 
----
+### El storyboard exportable es el MVP
+- PDF con todos los paneles, diálogos y descripciones de acción
+- Ya tiene valor por sí solo antes de la animación
 
-## Consecuencias
-
-- La estética B&N lápiz NO es una limitación técnica, es la propuesta de valor
-- El editor de guión es tan importante como el generador de storyboard
-- El precio debe ser accesible: objetivo €0 freemium + €9-29 pago único o mensual bajo
-- La animación es el paso 3, no el MVP — el storyboard exportable ya tiene valor para estos perfiles
-- Referencia de competencia a vigilar: Celtx (estudiantes), Boords (indie), Google Flow (general)
+### La animación es el paso que lo hace mágico
+- Cada panel cobra vida → sensación de "estoy viendo mi película"
+- No necesita ser fotorrealista — la animación sencilla sobre boceto B&N tiene su propia estética poderosa
 
 ---
 
