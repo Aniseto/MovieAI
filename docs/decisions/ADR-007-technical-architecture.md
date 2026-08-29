@@ -23,7 +23,7 @@
 | **BD** | SQLite (dev) → PostgreSQL (prod) | SQLite sin fricción local; Postgres en Azure para producción |
 | **ORM** | Drizzle | Type-safe, ligero, compatible SQLite + Postgres sin cambiar código |
 | **Imágenes** | Local (dev) → Azure Blob Storage (prod) | Sin coste en dev, escalable en prod |
-| **LLM chat** | Gemini API | Feedback narrativo, expansión de prompts, bajo coste por token |
+| **LLM chat** | Qwen3-14B-Q5_K_M local (llama-swap) | 100% local, €0 coste, privacidad total — ver ADR-008 |
 
 ---
 
@@ -280,7 +280,7 @@ Tiempo real: Socket.io
 API:         Next.js API Routes
 Colas (MVP): p-queue en memoria → BullMQ + Redis en producción
 BD (MVP):    SQLite + Drizzle → PostgreSQL en producción
-LLM:         Gemini API (chat narrativo + expansión prompts)
+LLM:         Qwen3-14B-Q5_K_M local via llama-swap (ver ADR-008)
 Imágenes:    FLUX.1 local + LoRA sketch B&N via ComfyUI
 Vídeo:       WAN 2.7 local via ComfyUI
 Exposición:  Cloudflare Tunnel para Dragon en producción
