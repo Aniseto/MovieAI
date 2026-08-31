@@ -121,7 +121,33 @@ color, photorealistic, detailed background, neon lighting, smooth edges,
 
 ---
 
-## 5. Flujo de cola (p-queue)
+## 5. Gestión de VRAM (crítico)
+
+La RTX 5070 Ti tiene 16GB de VRAM. Qwen (llama.cpp) ocupa ~10GB y SDXL+LoRA ocupa ~6-8GB. **No pueden coexistir en VRAM simultáneamente.**
+
+El flujo debe ejecutarse en dos fases secuenciales:
+
+```
+FASE A — LLM (llama.cpp activo)
+  1. Cargar Qwen en llama.cpp (ya cargado normalmente)
+  2. Analizar TODAS las escenas del guión
+  3. Generar TODOS los prompts SDXL
+  4. Guardar prompts en memoria/disco
+  5. Llamar a llama.cpp /unload (o detener el proceso) → liberar VRAM
+
+FASE B — Imagen (ComfyUI activo)
+  6. ComfyUI carga SDXL Base + LoRA (~6-8GB VRAM)
+  7. Generar todos los paneles secuencialmente (p-queue)
+  8. Al terminar: ComfyUI descarga el modelo (opcional, para restaurar Qwen)
+```
+
+**Implicación de implementación:**
+- El backend no puede intercalar llamadas LLM e imagen
+- Primero completa 100% la fase LLM, luego inicia la fase imagen
+- El endpoint `/unload` de llama.cpp (o `kill_on_finish`) debe llamarse entre fases
+- El frontend muestra dos barras de progreso: "Analizando guión..." y "Generando storyboard..."
+
+## 6. Flujo de cola (p-queue)
 
 ```
 POST /api/storyboard/generate
@@ -227,4 +253,5 @@ GET http://127.0.0.1:8188/history/abc123
 5. **ComfyUI workflow hardcodeado** en MVP — no necesita ser configurable por el usuario
 6. **PDF export con pdf-lib** — grid de paneles, imagen + diálogo de la escena debajo
 7. **Regenerar panel** = reencolar la misma escena con seed diferente (seed aleatorio)
-8. **Seed fijo por personaje** para consistencia visual entre paneles donde aparece el mismo personaje
+8. **Gestión VRAM:** primero generar TODOS los prompts con Qwen, luego descargar llama.cpp, luego iniciar ComfyUI — nunca en paralelo
+9. **Seed fijo por personaje** para consistencia visual entre paneles donde aparece el mismo personaje
