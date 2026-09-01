@@ -75,7 +75,8 @@ describe('EditorPage — tabs', () => {
     render(<EditorPage />)
     await waitFor(() => screen.getByText('Mi Película'))
     await userEvent.click(screen.getByRole('button', { name: /escenas/i }))
-    expect(screen.getByText(/próxima iteración/i)).toBeInTheDocument()
+    // ScenesPage hace su propio fetch — simplemente verificamos que el tab cambió
+    expect(screen.queryByTestId('block')).not.toBeInTheDocument()
   })
 
   it('el panel lateral permanece visible al cambiar de tab', async () => {

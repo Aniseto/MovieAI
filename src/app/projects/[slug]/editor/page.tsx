@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { BlockEditor } from '@/components/BlockEditor'
 import { ImagePanelConnected } from '@/components/ImagePanel'
+import ScenesPage from '@/app/projects/[slug]/scenes/page'
 import { useEditorStore } from '@/store/editorStore'
 import type { Block } from '@/store/editorStore'
 
@@ -115,10 +116,7 @@ export default function EditorPage() {
               onImageClick={(id) => useEditorStore.getState().setActiveImageBlock(id)}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center gap-3 py-20 text-gray-400">
-              <span className="text-4xl">🎬</span>
-              <p className="text-sm">La lista de escenas llega en la próxima iteración.</p>
-            </div>
+            <ScenesPage />
           )}
         </main>
 
