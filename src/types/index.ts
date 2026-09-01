@@ -1,4 +1,4 @@
-export type BlockType = 'synopsis' | 'action' | 'dialogue' | 'note' | 'character' | 'location'
+export type BlockType = 'synopsis' | 'structure' | 'scene' | 'action' | 'dialogue' | 'note' | 'character' | 'location'
 
 export interface Block {
   id: string
