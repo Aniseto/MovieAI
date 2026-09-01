@@ -7,6 +7,8 @@ import type { Block as BlockType } from '@/store/editorStore'
 
 const TYPE_LABELS: Record<BlockType['type'], string> = {
   synopsis:  'Sinopsis',
+  structure: 'Estructura',
+  scene:     'Escena',
   character: 'Personaje',
   location:  'Escenario',
   action:    'Acción',
@@ -16,6 +18,8 @@ const TYPE_LABELS: Record<BlockType['type'], string> = {
 
 const TYPE_ICONS: Record<BlockType['type'], string> = {
   synopsis:  '📝',
+  structure: '🏗️',
+  scene:     '🎞️',
   character: '👤',
   location:  '📍',
   action:    '🎬',
