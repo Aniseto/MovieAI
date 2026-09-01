@@ -4,7 +4,9 @@ import os from 'os'
 
 // ─── Rutas ────────────────────────────────────────────────────────────────────
 
-export const PROJECTS_ROOT = path.join(os.homedir(), 'MovieAI', 'projects')
+export const PROJECTS_ROOT =
+  process.env.MOVIEAI_PROJECTS_ROOT ??
+  path.join(os.homedir(), 'MovieAI', 'projects')
 
 export function projectDir(slug: string): string {
   return path.join(PROJECTS_ROOT, slug)
