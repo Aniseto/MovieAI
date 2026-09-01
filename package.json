@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "eslint",
         "test": "vitest",
-        "test:run": "vitest run",
+        "seed": "node scripts/seed-test-project.mjs",
+    "test:run": "vitest run",
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
