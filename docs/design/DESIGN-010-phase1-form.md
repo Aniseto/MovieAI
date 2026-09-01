@@ -8,252 +8,317 @@
 
 ---
 
-## Objetivo
+## 1. Decisiones de diseño
 
-Definir el diseño detallado del formulario web guiado de Fase 1 antes de iniciar la implementación. Este documento cubre: arquitectura de componentes, modelo de datos del formulario, lógica de validación, feedback de IA, persistencia y estados de UI.
+| Decisión | Valor |
+|----------|-------|
+| Navegación entre secciones | Libre — el usuario puede ir a cualquier sección en cualquier momento |
+| Feedback de IA | Orientativo — nunca bloqueante; el usuario puede ignorar sugerencias |
+| Imágenes de referencia | Generadas por botón, previa revisión IA del texto del personaje/escenario |
+| Persistencia | Ficheros Markdown — sin base de datos |
+| Organización | Una carpeta por proyecto, un `.md` por entidad |
 
 ---
 
-## 1. Estructura de navegación
-
-El formulario se organiza en **5 secciones secuenciales** accesibles mediante una barra lateral de progreso. El usuario puede navegar entre secciones completadas libremente, pero no puede saltar a una sección bloqueada.
+## 2. Estructura de carpetas y ficheros
 
 ```
-Layout:
+projects/
+└── {slug-del-proyecto}/
+    ├── project.md                        ← índice + mapa de referencias
+    ├── sinopsis.md
+    ├── estructura.md
+    ├── personajes/
+    │   ├── {slug-personaje}.md
+    │   └── {slug-personaje}-referencia.png   ← imagen generada, nombre derivado del .md
+    ├── escenarios/
+    │   ├── {slug-escenario}.md
+    │   └── {slug-escenario}-referencia.png
+    └── escenas/
+        └── escena-{nn}-{slug-titulo}.md      ← nn = número con cero (01, 02…)
+```
+
+**Slugs:** lowercase, sin tildes, espacios → guiones. Ejemplo: "El último tren" → `el-ultimo-tren`.
+
+---
+
+## 3. Formato de cada fichero
+
+### 3.1 `project.md` — Índice del proyecto
+
+```markdown
+# {Título del proyecto}
+
+**Slug:** el-ultimo-tren  
+**Género:** Drama  
+**Fase:** 1  
+**Creado:** 2026-09-01  
+**Actualizado:** 2026-09-01  
+
+## Documentos del proyecto
+
+- [Sinopsis](sinopsis.md)
+- [Estructura narrativa](estructura.md)
+
+### Personajes
+- [Marco](personajes/marco.md) — protagonista
+- [Elena](personajes/elena.md) — antagonista
+
+### Escenarios
+- [Estación central](escenarios/estacion-central.md)
+- [Apartamento de Marco](escenarios/apartamento-marco.md)
+
+### Escenas
+- [Escena 01 — El encuentro](escenas/escena-01-el-encuentro.md)
+- [Escena 02 — La decisión](escenas/escena-02-la-decision.md)
+
+## Estado de secciones
+
+| Sección | Estado |
+|---------|--------|
+| Sinopsis | ✅ completo |
+| Personajes | ⚠️ 1 de 2 completados |
+| Escenarios | 🔲 vacío |
+| Estructura | 🔲 vacío |
+| Escenas | 🔲 vacío |
+```
+
+---
+
+### 3.2 `sinopsis.md`
+
+```markdown
+# Sinopsis
+
+**Título:** El último tren  
+**Género:** Drama  
+**Tono:** Serio, Íntimo  
+
+## Logline
+
+Un hombre que perdió su memoria debe decidir si subirse al tren que le llevará de vuelta a su pasado.
+
+## Sinopsis corta
+
+Marco, un hombre de 45 años sin recuerdos, llega a una estación abandonada...
+```
+
+---
+
+### 3.3 `personajes/{slug}.md`
+
+```markdown
+# Personaje: Marco
+
+**Rol:** protagonista  
+**Edad:** 45  
+
+## Aspecto físico
+
+Alto, pelo canoso, gabardina beige desgastada. Ojos grises, mirada perdida.
+
+## Personalidad
+
+Reservado, melancólico, determinado cuando encuentra un propósito.
+
+## Motivación
+
+Recuperar su memoria y encontrar a la persona que dejó atrás.
+
+## Imagen de referencia
+
+![Marco — imagen de referencia](marco-referencia.png)  
+_Generada el 2026-09-01. Regenerar si se modifica el aspecto físico._
+```
+
+---
+
+### 3.4 `escenarios/{slug}.md`
+
+```markdown
+# Escenario: Estación central
+
+**Tipo:** INT  
+**Iluminación:** Penumbra  
+
+## Descripción
+
+Estación de tren abandonada de los años 40. Andenes de mármol agrietado...
+
+## Atmósfera
+
+Silenciosa y opresiva. El polvo flota en los rayos de luz que entran por las claraboyas rotas.
+
+## Elementos clave
+
+- Reloj parado a las 3:17
+- Maletas abandonadas en el andén
+- Un billete de tren en el suelo
+
+## Imagen de referencia
+
+![Estación central — imagen de referencia](estacion-central-referencia.png)  
+_Generada el 2026-09-01. Regenerar si se modifica la descripción o atmósfera._
+```
+
+---
+
+### 3.5 `estructura.md`
+
+```markdown
+# Estructura narrativa
+
+## Acto 1 — Planteamiento
+
+Marco aparece en la estación sin recuerdos...
+
+## Punto de giro 1
+
+Encuentra un billete con su nombre y la fecha de hoy.
+
+## Acto 2 — Nudo
+
+Marco investiga la estación buscando pistas de su identidad...
+
+## Punto de giro 2
+
+Descubre que Elena es quien borró sus recuerdos, y lo hizo para protegerle.
+
+## Acto 3 — Desenlace
+
+Marco debe elegir: subirse al tren (recuperar el pasado) o quedarse (empezar de nuevo).
+```
+
+---
+
+### 3.6 `escenas/escena-{nn}-{slug}.md`
+
+```markdown
+# Escena 01 — El encuentro
+
+**Escenario:** [Estación central](../escenarios/estacion-central.md)  
+**Personajes:** [Marco](../personajes/marco.md), [Elena](../personajes/elena.md)  
+**Momento:** Noche  
+**Emoción:** Tensión, Misterio  
+**Duración estimada:** 90 segundos  
+
+## Acción principal
+
+Marco entra en la estación vacía. Al fondo, Elena está sentada en un banco, mirando al vacío.
+
+## Diálogos clave
+
+**Marco:** ¿Quién eres tú?  
+**Elena:** La pregunta correcta es quién eres tú.
+
+## Notas de producción
+
+_Campo libre para notas adicionales._
+```
+
+---
+
+## 4. Sistema de referencias entre documentos
+
+### Principio (Opción C)
+
+- **`project.md`** actúa como índice central: lista todas las entidades con sus rutas relativas.
+- **Escenas** incluyen referencias inline explícitas a los personajes y escenarios que intervienen.
+- **Personajes y escenarios** son documentos independientes sin referencias a otros (son entidades base).
+- **La IA**, antes de procesar una escena, carga: `project.md` + el `.md` de la escena + los `.md` de personajes y escenarios referenciados en esa escena.
+
+### Qué carga la IA según el contexto
+
+| Operación | Ficheros que carga la IA |
+|-----------|--------------------------|
+| Feedback de sinopsis | `project.md` + `sinopsis.md` |
+| Feedback de personaje | `project.md` + `sinopsis.md` + `{personaje}.md` |
+| Generar imagen de personaje | `sinopsis.md` + `{personaje}.md` |
+| Feedback de escena | `project.md` + `sinopsis.md` + `escena.md` + personajes y escenarios referenciados |
+| Generar imagen de escenario | `sinopsis.md` + `{escenario}.md` |
+| Verificar coherencia global | `project.md` + todos los `.md` del proyecto |
+
+---
+
+## 5. Flujo de generación de imágenes de referencia
+
+```
+Usuario rellena descripción del personaje/escenario
+              ↓
+Pulsa [Generar imagen de referencia]
+              ↓
+API llama a IA para revisar el texto:
+  ¿Es suficientemente descriptivo para ComfyUI?
+  ¿Tiene información visual concreta (colores, formas, iluminación)?
+  ¿Hay contradicciones internas?
+              ↓
+         ¿Pasa revisión?
+        /             \
+      SÍ               NO
+       ↓                ↓
+Lanza workflow       Muestra sugerencias
+ComfyUI              "El aspecto físico necesita
+       ↓              más detalle visual antes
+Imagen generada       de generar la imagen"
+       ↓
+Guarda como {slug}-referencia.png
+junto al .md del personaje/escenario
+       ↓
+Actualiza el .md con referencia a la imagen
+y fecha de generación
+```
+
+**Nota:** Si el usuario modifica el texto después de generar la imagen, aparece un aviso: _"La descripción ha cambiado desde la última generación. ¿Regenerar imagen?"_
+
+---
+
+## 6. Layout del formulario
+
+```
 ┌──────────────────────────────────────────────────────────┐
-│  MovieAI — Proyecto: [Título del proyecto]               │
+│  MovieAI — {Título del proyecto}        [Guardar]        │
 ├──────────────┬───────────────────────────────────────────┤
 │              │                                           │
-│  PROGRESO    │   CONTENIDO DE LA SECCIÓN ACTIVA          │
+│  SECCIONES   │   CONTENIDO DE LA SECCIÓN ACTIVA          │
 │              │                                           │
-│  ✅ Sinopsis │                                           │
-│  ⚠️ Personajes│                                           │
-│  🔲 Escenarios│                                           │
-│  🔲 Estructura│                                           │
-│  🔲 Escenas  │                                           │
+│  📝 Sinopsis │   (campos, feedback IA inline,            │
+│  👤 Personajes│    botones de ayuda y generación)         │
+│  🏛️ Escenarios│                                           │
+│  📖 Estructura│                                           │
+│  🎬 Escenas  │                                           │
 │              │                                           │
 │  ──────────  │                                           │
+│  PROGRESO    │                                           │
+│  [████░░] 3/5│                                           │
+│              │                                           │
 │  [🎬 Generar]│                                           │
-│  (bloqueado) │                                           │
 │              │                                           │
 └──────────────┴───────────────────────────────────────────┘
 ```
 
-**Regla de navegación:**
-- Secciones 2–5 se desbloquean cuando la anterior está completa (≥ campos obligatorios rellenos)
-- Excepción: el usuario puede crear personajes y escenarios antes de completar sinopsis si accede directamente desde un enlace directo (no es el flujo estándar)
-
 ---
 
-## 2. Secciones y campos
+## 7. Estados de campo y sección
 
-### 2.1 Sección 1 — Sinopsis
-
-| Campo | Tipo | Obligatorio | Validación semántica IA |
-|-------|------|-------------|-------------------------|
-| Título | Text input | ✅ | No |
-| Género | Chips de selección única | ✅ | No |
-| Tono | Chips de selección múltiple | ✅ | No |
-| Logline | Textarea (1–2 líneas) | ✅ | ✅ — ¿tiene protagonista, conflicto y objetivo? |
-| Sinopsis corta | Textarea (3–5 líneas) | ✅ | ✅ — ¿coherente con logline y género? |
-
-**Géneros disponibles:** Drama · Comedia · Terror · Fantasía · Sci-Fi · Thriller · Animación · Documental · Otro  
-**Tonos disponibles:** Serio · Humorístico · Épico · Íntimo · Oscuro · Esperanzador · Irónico
-
----
-
-### 2.2 Sección 2 — Personajes
-
-Lista dinámica de personajes. Mínimo **1 personaje** (protagonista) para completar la sección.
-
-**Por cada personaje:**
-
-| Campo | Tipo | Obligatorio | Validación semántica IA |
-|-------|------|-------------|-------------------------|
-| Nombre | Text input | ✅ | No |
-| Rol | Select (protagonista/antagonista/secundario/otro) | ✅ | No |
-| Edad | Number input | ✅ | No |
-| Aspecto físico | Textarea | ✅ | ✅ — ¿suficientemente descriptivo para generar imagen? |
-| Personalidad | Textarea | ✅ | ✅ — ¿clara y consistente? |
-| Motivación | Textarea | ✅ | ✅ — ¿creíble y que impulse la historia? |
-| Imagen de referencia | Upload o texto | ❌ opcional | No |
-
-**Restricción:** debe existir exactamente 1 personaje con rol `protagonista`.
-
----
-
-### 2.3 Sección 3 — Escenarios
-
-Lista dinámica de escenarios. Mínimo **1 escenario** para completar.
-
-**Por cada escenario:**
-
-| Campo | Tipo | Obligatorio | Validación semántica IA |
-|-------|------|-------------|-------------------------|
-| Nombre | Text input | ✅ | No |
-| Tipo | Toggle INT / EXT | ✅ | No |
-| Descripción | Textarea | ✅ | ✅ — ¿tiene suficiente detalle visual? |
-| Atmósfera | Textarea | ✅ | ✅ — ¿evoca una sensación clara? |
-| Iluminación | Chips de selección | ✅ | No |
-| Elementos clave | Tags (lista libre) | ❌ opcional | No |
-
-**Iluminaciones disponibles:** Luz natural · Artificial · Nocturno · Penumbra · Contraluz · Neblina · Otros
-
----
-
-### 2.4 Sección 4 — Estructura narrativa
-
-Formulario fijo de 3 actos con puntos de giro.
-
-| Campo | Tipo | Obligatorio | Validación semántica IA |
-|-------|------|-------------|-------------------------|
-| Acto 1 — Planteamiento | Textarea | ✅ | ✅ — ¿presenta personajes y situación inicial? |
-| Punto de giro 1 | Textarea | ✅ | ✅ — ¿cambia el estado inicial de forma clara? |
-| Acto 2 — Nudo | Textarea | ✅ | ✅ — ¿hay conflicto y desarrollo? |
-| Punto de giro 2 | Textarea | ✅ | ✅ — ¿momento de máxima tensión identificable? |
-| Acto 3 — Desenlace | Textarea | ✅ | ✅ — ¿resuelve el conflicto principal? |
-
----
-
-### 2.5 Sección 5 — Escenas
-
-Lista dinámica de escenas. Mínimo **2 escenas** para completar.
-
-**Por cada escena:**
-
-| Campo | Tipo | Obligatorio | Validación semántica IA |
-|-------|------|-------------|-------------------------|
-| Número y título | Text input | ✅ | No |
-| Localización | Select (referencia a escenarios definidos) | ✅ | No |
-| Momento del día | Select (mañana/tarde/noche/amanecer/atardecer) | ✅ | No |
-| Personajes presentes | Multi-select (referencia a personajes definidos) | ✅ | No |
-| Acción principal | Textarea | ✅ | ✅ — ¿clara y que avance la historia? |
-| Diálogos clave | Textarea | ❌ opcional | No |
-| Emoción de la escena | Chips de selección | ✅ | No |
-| Duración estimada | Number (segundos) | ❌ opcional | No |
-
-**Emociones disponibles:** Tensión · Ternura · Miedo · Alegría · Tristeza · Sorpresa · Rabia · Nostalgia
-
----
-
-## 3. Sistema de feedback de IA
-
-### 3.1 Modalidades
-
-**A — Validación automática al salir del campo (on blur)**
-- Se dispara cuando el usuario sale de un campo con validación semántica
-- Muestra un indicador de carga inline breve (< 2s objetivo)
-- Resultado: ✅ mensaje de confirmación · ⚠️ sugerencia de mejora · ❌ problema claro
-
-**B — Botón "Ayúdame" por campo**
-- Disponible en todos los campos con validación semántica
-- Abre un panel lateral de chat contextual preconfigurado con el campo actual
-- El usuario puede hacer preguntas libres sobre ese campo
-
-### 3.2 Llamadas a la API de IA
-
-Endpoint: `POST /api/ai/feedback`
-
-```json
-{
-  "field": "logline",
-  "section": "synopsis",
-  "value": "Un hombre que perdió su memoria...",
-  "context": {
-    "genre": "Drama",
-    "tone": ["Serio", "Íntimo"]
-  }
-}
-```
-
-Respuesta:
-```json
-{
-  "status": "warning",
-  "message": "El logline tiene protagonista y conflicto, pero el objetivo final del personaje no está claro. ¿Qué busca conseguir exactamente?",
-  "suggestion": "Considera añadir: 'para [objetivo concreto]' al final del logline."
-}
-```
-
-**Modelo:** Qwen3-14B-Q5_K_M local (ADR-007/008). Gemini API como fallback si el modelo local no está disponible.
-
-### 3.3 Límites y throttle
-- Máximo 1 llamada por campo cada 3 segundos (debounce)
-- Si el campo tiene < 20 caracteres: no llamar a la IA
-- Timeout: 10 segundos; si supera → mostrar "No se pudo validar, continúa igualmente"
-
----
-
-## 4. Estados de campo y sección
-
-### Estados de campo
 | Estado | Icono | Descripción |
 |--------|-------|-------------|
-| `empty` | 🔲 | Vacío, obligatorio |
-| `editing` | ✏️ | En edición activa |
-| `validating` | ⏳ | Llamada IA en curso |
-| `warning` | ⚠️ | Relleno pero con sugerencia de mejora |
-| `complete` | ✅ | Relleno y validado (o sin validación requerida) |
-| `error` | ❌ | Vacío al intentar avanzar |
+| `empty` | 🔲 | Vacío |
+| `filled` | 📝 | Relleno, sin revisión IA |
+| `warning` | ⚠️ | Con sugerencia de mejora (orientativa, no bloqueante) |
+| `complete` | ✅ | Relleno (con o sin revisión IA) |
 
-### Estados de sección
-| Estado | Icono | Condición |
-|--------|-------|-----------|
-| `locked` | 🔒 | Sección anterior no completada |
-| `incomplete` | ⚠️ | Al menos un campo obligatorio vacío o con error |
-| `partial` | 📝 | Campos obligatorios rellenos, algunos opcionales vacíos o con warnings |
-| `complete` | ✅ | Todos los campos obligatorios completos y sin errores bloqueantes |
+**El botón Generar Storyboard se desbloquea cuando todos los campos obligatorios de todas las secciones están en estado `filled` o `complete`** — independientemente de warnings.
 
 ---
 
-## 5. Persistencia
-
-### 5.1 localStorage (draft automático)
-- Guardado automático cada vez que el usuario modifica un campo (debounce 1s)
-- Clave: `movieai_project_draft_{projectId}`
-- Al cargar la página: restaurar desde localStorage si existe draft más reciente que BD
-- Límite: si el proyecto ya está guardado en BD, localStorage solo es cache temporal
-
-### 5.2 Base de datos
-- Guardado explícito con botón "Guardar proyecto" visible en la barra superior
-- También se guarda automáticamente al navegar entre secciones
-- Schema: tablas `projects`, `characters`, `locations`, `scenes` (ADR-007)
-
-### 5.3 Conflicto localStorage vs BD
-- Si localStorage tiene cambios más recientes que BD: mostrar banner "Tienes cambios sin guardar" con opciones [Guardar ahora] [Descartar]
-
----
-
-## 6. Botón "Generar Storyboard"
-
-### Estado bloqueado (default)
-```
-[ 🔒 Generar Storyboard ]   ← disabled, color gris
-  Completa todas las secciones para continuar
-  Sinopsis ✅ · Personajes ⚠️ · Escenarios 🔲 · Estructura 🔲 · Escenas 🔲
-```
-
-### Estado desbloqueado
-```
-[ 🎬 Generar Storyboard ]   ← enabled, color primario
-  Proyecto listo — 1 protagonista · 3 personajes · 2 escenarios · 5 escenas
-```
-
-**Condición de desbloqueo:** todas las secciones en estado `complete` o `partial` (campos obligatorios rellenos, sin errores bloqueantes).
-
-**Al hacer clic:** confirmación modal antes de iniciar la generación:
-> "Vas a generar el storyboard en baja calidad de 5 escenas. Una vez iniciado, podrás seguir editando el guión, pero los cambios requerirán regenerar los paneles afectados. ¿Continuar?"
-
----
-
-## 7. Arquitectura de componentes React
+## 8. Arquitectura de componentes React
 
 ```
-/app/projects/[id]/phase1/
-├── page.tsx                          ← layout principal con barra de progreso
+/app/projects/[slug]/phase1/
+├── page.tsx
 ├── components/
-│   ├── Phase1Sidebar.tsx             ← barra lateral con progreso y botón generar
-│   ├── Phase1ProgressBar.tsx         ← barra de progreso global (mobile)
+│   ├── Phase1Layout.tsx            ← sidebar + contenido
+│   ├── Phase1Sidebar.tsx           ← navegación secciones + progreso + botón generar
 │   ├── sections/
 │   │   ├── SynopsisSection.tsx
 │   │   ├── CharactersSection.tsx
@@ -261,78 +326,61 @@ Respuesta:
 │   │   ├── StructureSection.tsx
 │   │   └── ScenesSection.tsx
 │   ├── fields/
-│   │   ├── ValidatedField.tsx        ← wrapper con feedback IA inline
-│   │   ├── ChipSelector.tsx          ← selección de chips (género, tono, emoción)
-│   │   ├── DynamicList.tsx           ← lista dinámica (personajes, escenarios, escenas)
-│   │   └── AiHelpPanel.tsx           ← panel lateral de chat contextual
-│   └── GenerateButton.tsx            ← botón con lógica de desbloqueo
+│   │   ├── AiField.tsx             ← campo con botón "Ayúdame" + feedback inline
+│   │   ├── ChipSelector.tsx
+│   │   ├── DynamicList.tsx         ← lista dinámica (personajes, escenarios, escenas)
+│   │   └── ImageGenerator.tsx     ← botón generar imagen + estado + preview
+│   └── GenerateButton.tsx
 ├── hooks/
-│   ├── usePhase1Form.ts              ← estado global del formulario (Zustand)
-│   ├── useAiFeedback.ts              ← llamadas a /api/ai/feedback con debounce
-│   └── useAutosave.ts                ← persistencia localStorage + BD
+│   ├── usePhase1Store.ts           ← Zustand store
+│   ├── useAiFeedback.ts            ← llamadas a /api/ai/feedback
+│   ├── useImageGeneration.ts       ← llamadas a /api/generate/reference-image
+│   └── useMarkdownPersistence.ts   ← leer/escribir ficheros .md via API
 └── store/
-    └── phase1Store.ts                ← Zustand store tipado con el estado completo
+    └── phase1Store.ts
 ```
 
 ---
 
-## 8. Modelo de estado Zustand
+## 9. API Routes necesarias
 
-```typescript
-interface Phase1State {
-  projectId: string;
-  synopsis: {
-    title: string;
-    genre: string;
-    tones: string[];
-    logline: string;
-    synopsis: string;
-  };
-  characters: Character[];
-  locations: Location[];
-  structure: {
-    act1: string;
-    turningPoint1: string;
-    act2: string;
-    turningPoint2: string;
-    act3: string;
-  };
-  scenes: Scene[];
-  
-  // Estado de validación por campo
-  fieldStatus: Record<string, FieldStatus>;
-  
-  // Estado de secciones
-  sectionStatus: Record<SectionKey, SectionStatus>;
-  
-  // Computed
-  canGenerate: boolean;
-  
-  // Actions
-  updateSynopsis: (data: Partial<SynopsisData>) => void;
-  addCharacter: () => void;
-  updateCharacter: (id: string, data: Partial<Character>) => void;
-  removeCharacter: (id: string) => void;
-  // ... etc.
-}
-```
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/projects` | Listar proyectos (leer carpeta `projects/`) |
+| GET | `/api/projects/[slug]` | Leer `project.md` + parsear estado |
+| PUT | `/api/projects/[slug]/[doc]` | Escribir/actualizar un `.md` concreto |
+| POST | `/api/ai/feedback` | Revisión orientativa de un campo |
+| POST | `/api/ai/verify-for-image` | Verificar texto antes de generar imagen |
+| POST | `/api/generate/reference-image` | Lanzar workflow ComfyUI + guardar PNG |
 
 ---
 
-## 9. Preguntas abiertas (requieren decisión de Jordi)
+## 10. Plan de implementación propuesto (tareas atómicas)
 
-| # | Pregunta | Opciones | Impacto |
-|---|----------|----------|---------|
-| P1 | ¿La navegación entre secciones es **libre** (cualquier sección en cualquier momento) o **secuencial** (solo avanzas cuando la anterior está completa)? | A) Libre — más flexible, más complejo de validar · B) Secuencial — más guiado, más simple | UX y lógica de validación |
-| P2 | ¿El feedback de IA es **bloqueante** (no puedes avanzar sin resolver warnings) o **orientativo** (puedes ignorar los warnings y avanzar)? | A) Bloqueante — más calidad de datos · B) Orientativo — más libertad | Criterio de desbloqueo del botón Generar |
-| P3 | ¿Los campos de **imagen de referencia** para personajes son MVP o se dejan para v2? | A) MVP — añade complejidad de upload · B) v2 — simplifica el MVP | Scope y tiempo de implementación |
-| P4 | ¿El **panel de chat de IA** (botón "Ayúdame") es MVP o se implementa como mejora posterior? | A) MVP — mejor UX · B) Post-MVP — simplifica el primer entregable | Scope y tiempo de implementación |
+El siguiente desglose es una **propuesta** de orden de implementación. Cada tarea es independiente y verificable antes de pasar a la siguiente.
+
+| # | Tarea | Descripción | Dependencias |
+|---|-------|-------------|--------------|
+| T-01 | Estructura de ficheros | Definir y validar el formato exacto de cada `.md` con ejemplos reales | — |
+| T-02 | API de persistencia | CRUD de ficheros `.md` via Next.js API Routes | T-01 |
+| T-03 | Layout base | Sidebar + navegación entre secciones + routing | — |
+| T-04 | Sección Sinopsis | Formulario + guardado en `sinopsis.md` | T-02, T-03 |
+| T-05 | Sección Personajes | Lista dinámica + guardado en `personajes/{slug}.md` | T-02, T-03 |
+| T-06 | Sección Escenarios | Lista dinámica + guardado en `escenarios/{slug}.md` | T-02, T-03 |
+| T-07 | Sección Estructura | Formulario 3 actos + guardado en `estructura.md` | T-02, T-03 |
+| T-08 | Sección Escenas | Lista dinámica con referencias + guardado | T-02, T-03, T-05, T-06 |
+| T-09 | Progreso y botón Generar | Calcular estado de secciones + desbloqueo | T-04…T-08 |
+| T-10 | Feedback IA por campo | Botón "Ayúdame" + sugerencias inline | T-04…T-08 |
+| T-11 | Generación de imágenes | Verificación IA + workflow ComfyUI + guardar PNG | T-05, T-06, T-10 |
 
 ---
 
-## 10. Estado de aprobación
+## 11. Estado de aprobación
 
-**PROPOSED** — Este documento es una propuesta de diseño. No se inicia implementación hasta que Jordi apruebe:
-1. El diseño general del formulario
-2. Las respuestas a las preguntas abiertas (sección 9)
-3. El estado de los ADRs 005 y 006 (actualmente PROPOSED en el repo)
+**PROPOSED** — No se inicia implementación hasta aprobación de Jordi.
+
+Pendiente de confirmar:
+1. Formato de los ficheros `.md` (sección 3)
+2. Estructura de carpetas (sección 2)
+3. Plan de implementación (sección 10) — orden y granularidad de tareas
+4. Estado de ADR-005 y ADR-006 (actualmente PROPOSED en el repo)
