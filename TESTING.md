@@ -121,14 +121,24 @@ Estado actual: **124 tests passing**
 - ✅ Arrastrar una escena reordena la lista
 - ✅ Pulsar × → confirmación → escena eliminada
 
+### 4. Editor de escena individual
+- Pulsa "Editar" en cualquier escena
+- ✅ Breadcrumb: `mi-peli › Escenas › Escena 01 — El Despertar`
+- ✅ Campos de título, escenario, momento del día
+- ✅ Chips de emoción (Tensión, Misterio...)
+- ✅ BlockEditor con solo tipos action/diálogo/nota
+- ✅ Botón Guardar → aparece "✓ Guardado" 2 segundos
+- ✅ Panel lateral con ImagePanel
+- ✅ Flecha ← vuelve al editor
+
 ---
 
 ## Próximas features a probar (pendientes)
 
 | Issue | Feature | Cómo probar |
 |-------|---------|-------------|
-| #57 | Editor de escena individual | Click en "Editar" en una escena |
 | #60 | Progreso del proyecto | Badge en la tarjeta del proyecto |
+| #62 | Feedback IA en bloques | Botón IA en cada bloque |
 
 ---
 
