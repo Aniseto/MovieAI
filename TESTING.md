@@ -113,13 +113,21 @@ Estado actual: **124 tests passing**
 
 ---
 
+### 3. Lista de escenas (tab Escenas en el editor)
+- En el editor, pulsa el tab "🎬 Escenas"
+- ✅ Aparecen las escenas del proyecto en orden
+- ✅ Cada escena tiene número, título, botones Editar y ×
+- ✅ Botón "+ Nueva escena" en la cabecera
+- ✅ Arrastrar una escena reordena la lista
+- ✅ Pulsar × → confirmación → escena eliminada
+
+---
+
 ## Próximas features a probar (pendientes)
 
 | Issue | Feature | Cómo probar |
 |-------|---------|-------------|
-| #56 | Lista de escenas | Tab "Escenas" en el editor |
-| #57 | Editor de escena | Click en una escena |
-| #39 | ✅ Pantalla de inicio | `http://localhost:3000` |
+| #57 | Editor de escena individual | Click en "Editar" en una escena |
 | #60 | Progreso del proyecto | Badge en la tarjeta del proyecto |
 
 ---
